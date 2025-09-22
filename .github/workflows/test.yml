@@ -1,0 +1,29 @@
+name: Test Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: List files
+        run: |
+          echo "Repository contents:"
+          ls -la
+          echo "Server files:"
+          ls -la server/
+          echo "Client files:"
+          ls -la client/
+          
+      - name: Check package files
+        run: |
+          echo "Server package files:"
+          ls -la server/package*
+          echo "Client package files:"
+          ls -la client/package*
