@@ -18,9 +18,9 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-    command: npm start   
+    command: npm start
     environment:
-      - MONGO_URI=mongodb://root:example@mongo:27017/yourdb?authSource=admin
+      - MONGO_URI=mongodb+srv://taida22it_db_user:AUueJn4k0EM2sskh@anhtai.ojuuoai.mongodb.net/?retryWrites=true&w=majority&appName=anhtai
       - PORT=4000
     ports:
       - "4000:4000"
