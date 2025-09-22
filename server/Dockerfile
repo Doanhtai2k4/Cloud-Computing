@@ -6,17 +6,20 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
 
-# copy package files and install only production deps
-COPY package.json package-lock.json ./
+# copy package files first (for better caching)
+COPY package*.json ./
+
+# install dependencies
 RUN npm ci --production
 
-# copy source
+# copy source code
 COPY . .
 
-# nếu bạn có build step (babel/ts), add RUN npm run build
-# expose port (thay 4000 nếu app bạn dùng cổng khác)
+# expose port 
 EXPOSE 4000
 
+# switch to non-root user
+USER appuser
 
 # start app
 CMD ["npm", "start"]
