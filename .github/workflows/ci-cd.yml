@@ -1,15 +1,12 @@
-name: MERN CI/CD Pipeline
+name: MERN CI/CD Simple
 
 on:
   push:
     branches: [master]
   workflow_dispatch:
 
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,202 +21,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Backend Docker Image
+      - name: Build and Push Backend
         run: |
-          echo "🔨 Building backend image..."
-          docker build \
-            --build-arg MONGODB_URI="${{ secrets.MONGODB_URI }}" \
-            --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            --build-arg GOOGLE_API_KEY="${{ secrets.GOOGLE_API_KEY }}" \
-            -t ${{ env.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} \
-            -t ${{ env.DOCKER_USERNAME }}/mern-backend:latest \
-            ./server
-
-      - name: Build Frontend Docker Image
-        run: |
-          echo "🔨 Building frontend image..."
-          docker build \
-            -t ${{ env.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} \
-            -t ${{ env.DOCKER_USERNAME }}/mern-frontend:latest \
-            ./client
-
-      - name: Push Backend Image to Docker Hub
-        run: |
-          echo "📦 Pushing backend image..."
-          docker push ${{ env.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
-          docker push ${{ env.DOCKER_USERNAME }}/mern-backend:latest
-          echo "✅ Backend image pushed successfully!"
-
-      - name: Push Frontend Image to Docker Hub
-        run: |
-          echo "📦 Pushing frontend image..."
-          docker push ${{ env.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }}
-          docker push ${{ env.DOCKER_USERNAME }}/mern-frontend:latest
-          echo "✅ Frontend image pushed successfully!"
-
-      - name: Create docker-compose.prod.yml
-        run: |
-          echo "📝 Creating production docker-compose file..."
-          cat > docker-compose.prod.yml << EOF
-          version: '3.8'
-
-          services:
-            backend:
-              image: ${{ env.DOCKER_USERNAME }}/mern-backend:latest
-              restart: unless-stopped
-              ports:
-                - "4000:4000"
-              environment:
-                - MONGODB_URI=${{ secrets.MONGODB_URI }}
-                - JWT_SECRET=${{ secrets.JWT_SECRET }}
-                - GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
-                - PORT=4000
-              networks:
-                - app-network
-
-            frontend:
-              image: ${{ env.DOCKER_USERNAME }}/mern-frontend:latest
-              restart: unless-stopped
-              ports:
-                - "80:80"
-              depends_on:
-                - backend
-              networks:
-                - app-network
-
-          networks:
-            app-network:
-              driver: bridge
-          EOF
-
-      - name: Test Docker Images Locally
-        run: |
-          echo "🧪 Testing images locally..."
-
-          # Test backend container
-          echo "Testing backend container..."
-          docker run --rm -d --name test-backend -p 4001:4000 \
-            -e MONGODB_URI="${{ secrets.MONGODB_URI }}" \
-            -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            -e GOOGLE_API_KEY="${{ secrets.GOOGLE_API_KEY }}" \
-            ${{ env.DOCKER_USERNAME }}/mern-backend:latest
-            
-          # Wait for backend to start
-          sleep 10
-
-          # Check if backend is running
-          if docker ps | grep test-backend; then
-            echo "✅ Backend container is running"
-            docker logs test-backend
-            docker stop test-backend
-          else
-            echo "❌ Backend container failed to start"
-            exit 1
-          fi
-
-          # Test frontend container
-          echo "Testing frontend container..."
-          docker run --rm -d --name test-frontend -p 8001:80 \
-            ${{ env.DOCKER_USERNAME }}/mern-frontend:latest
-            
-          sleep 5
-
-          if docker ps | grep test-frontend; then
-            echo "✅ Frontend container is running"
-            docker stop test-frontend
-          else
-            echo "❌ Frontend container failed to start"
-            exit 1
-          fi
-
-      - name: Deployment Summary
-        run: |
-          echo "🎉 Deployment Complete!"
-          echo "=================================="
-          echo "✅ Backend Image: ${{ env.DOCKER_USERNAME }}/mern-backend:latest"
-          echo "✅ Frontend Image: ${{ env.DOCKER_USERNAME }}/mern-frontend:latest"
-          echo "✅ Commit SHA: ${{ github.sha }}"
-          echo ""
-          echo "🚀 To deploy on your server:"
-          echo "1. Copy docker-compose.prod.yml to your server"
-          echo "2. Run: docker-compose -f docker-compose.prod.yml up -d"
-          echo ""
-          echo "🔗 Docker Hub: https://hub.docker.com/u/${{ env.DOCKER_USERNAME }}"
-          echo "=================================="
-
-      - name: Upload docker-compose.prod.yml as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-compose-production
-          path: docker-compose.prod.yml
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_SSH_PORT || '22' }}
-          script: |
-            cd ~/app
-
-            # Create .env file with secrets
-            cat << EOF > .env
-            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            MONGO_URL=${{ secrets.MONGO_URL }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            CHATBOT_API_KEY=${{ secrets.CHATBOT_API_KEY }}
-            EOF
-
-            # Login to Docker Hub
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-            # Pull latest images and restart services
-            docker-compose pull
-            docker-compose up -d --remove-orphans
-
-            # Clean up unused images
-            docker image prune -f
-
-      - name: Build & Push backend image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} ./server
-          docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
-          docker tag ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
+          echo "🔨 Building backend..."
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest ./server
+          echo "📦 Pushing backend..."
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
 
-      - name: Build & Push frontend image
+      - name: Build and Push Frontend
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} ./client
-          docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }}
-          docker tag ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
+          echo "� Building frontend..."
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest ./client
+          echo "📦 Pushing frontend..."
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
 
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-
-    steps:
-      - name: Deploy to server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_SSH_PORT || '22' }}
-          script: |
-            cd ~/app
-
-            # Create .env file with secrets
-            cat << EOF > .env
-            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            MONGO_URL=${{ secrets.MONGO_URL }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            CHATBOT_API_KEY=${{ secrets.CHATBOT_API_KEY }}
-            EOF
-
-            # Login to Docker Hub
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-            # Pull latest images and restart services
-            docker-compose pull
-            docker-compose up -d --remove-orphans
-
-            # Clean up unused images
-            docker image prune -f
+      - name: Success Summary
+        run: |
+          echo "🎉 Deployment Complete!"
+          echo "✅ Backend: ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest"
+          echo "✅ Frontend: ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest"
+          echo " Docker Hub: https://hub.docker.com/u/${{ secrets.DOCKER_USERNAME }}"
