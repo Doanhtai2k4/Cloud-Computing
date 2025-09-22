@@ -1,4 +1,4 @@
-name: MERN CI/CD Production
+name: MERN CI/CD - Docker Hub
 
 on:
   push:
@@ -6,10 +6,11 @@ on:
     paths-ignore:
       - 'README.md'
       - '.github/workflows/test.yml'
+      - '.github/workflows/build-test.yml'
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,28 +27,94 @@ jobs:
 
       - name: Build & Push backend image
         run: |
+          echo "Building backend image..."
           docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} ./server
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
+          
+          echo "Tagging and pushing latest..."
           docker tag ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
+          
+          echo "Backend deployment complete!"
 
       - name: Build & Push frontend image
         run: |
+          echo "Building frontend image..."
           docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} ./client
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }}
+          
+          echo "Tagging and pushing latest..."
           docker tag ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
+          
+          echo "Frontend deployment complete!"
 
-  deploy:
-    needs: build-and-deploy
+      - name: Deployment Summary
+        run: |
+          echo "🎉 Deployment Summary:"
+          echo "✅ Backend image: ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest"
+          echo "✅ Frontend image: ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest"
+          echo "✅ Commit SHA: ${{ github.sha }}"
+          echo ""
+          echo "📋 To run locally:"
+          echo "docker run -p 4000:4000 ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest"
+          echo "docker run -p 80:80 ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest"
+          echo ""
+          echo "🚀 Images are ready for production deployment!"
+
+  # Optional: Deploy job (only runs if server secrets are available)
+  check-for-server:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    outputs:
+      has-server-secrets: ${{ steps.check.outputs.has-server-secrets }}
+    steps:
+      - name: Check for server secrets
+        id: check
+        run: |
+          if [[ "${{ secrets.SERVER_HOST }}" != "" && "${{ secrets.SERVER_USER }}" != "" && "${{ secrets.SERVER_SSH_KEY }}" != "" ]]; then
+            echo "has-server-secrets=true" >> $GITHUB_OUTPUT
+            echo "✅ Server secrets found - deploy job will run"
+          else
+            echo "has-server-secrets=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No server secrets - skipping deploy to server"
+          fi
+
+  deploy-to-server:
+    needs: [build-and-push, check-for-server]
+    runs-on: ubuntu-latest
+    if: needs.check-for-server.outputs.has-server-secrets == 'true'
     
     steps:
+      - name: Checkout code  
+        uses: actions/checkout@v4
+        
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT || '22' }}
+          script: |
+            cd ~/app
+            
+            # Create .env file with secrets
+            cat << EOF > .env
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            MONGO_URL=${{ secrets.MONGO_URL }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            CHATBOT_API_KEY=${{ secrets.CHATBOT_API_KEY }}
+            EOF
+            
+            # Login to Docker Hub
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            
+            # Pull latest images and restart services
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+            
+            # Clean up unused images
+            docker image prune -f
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT || '22' }}
