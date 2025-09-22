@@ -1,0 +1,84 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Server
+        run: |
+          cd server
+          npm ci
+          echo "Server build completed"
+
+      - name: Build Client
+        run: |
+          cd client
+          npm ci
+          npm run build
+          echo "Client build completed"
+
+      - name: Test Docker builds (without push)
+        run: |
+          echo "Testing Docker builds locally..."
+          docker build -t test-backend ./server
+          docker build -t test-frontend ./client
+          echo "Docker builds successful!"
+
+  # Only run deploy job if we have the necessary secrets
+  check-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      has-docker-secrets: ${{ steps.check.outputs.has-docker-secrets }}
+    steps:
+      - name: Check for Docker Hub secrets
+        id: check
+        run: |
+          if [[ "${{ secrets.DOCKER_USERNAME }}" != "" && "${{ secrets.DOCKER_PASSWORD }}" != "" ]]; then
+            echo "has-docker-secrets=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-docker-secrets=false" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: [build, check-secrets]
+    runs-on: ubuntu-latest
+    if: needs.check-secrets.outputs.has-docker-secrets == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} ./server
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/mern-backend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-backend:latest
+
+      - name: Build and Push Frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} ./client
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/mern-frontend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/mern-frontend:latest
