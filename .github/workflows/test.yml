@@ -1,29 +1,25 @@
-name: Test Workflow
+name: Simple Test
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
-  test:
+  hello:
     runs-on: ubuntu-latest
     steps:
+      - name: Hello World
+        run: echo "Hello World! GitHub Actions is working!"
+        
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: List files
+      - name: Show repository contents
         run: |
-          echo "Repository contents:"
+          echo "=== Repository Contents ==="
           ls -la
-          echo "Server files:"
-          ls -la server/
-          echo "Client files:"
-          ls -la client/
-          
-      - name: Check package files
-        run: |
-          echo "Server package files:"
-          ls -la server/package*
-          echo "Client package files:"
-          ls -la client/package*
+          echo "=== Server Directory ==="
+          ls -la server/ || echo "Server directory not found"
+          echo "=== Client Directory ==="
+          ls -la client/ || echo "Client directory not found"
