@@ -24,6 +24,17 @@ app.use(morgan('dev'))
 connectDB();
     
 const PORT = process.env.PORT || 3001;
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
 app.use('/api/v1/auth/', usersRouter);
 app.use('/api/v1/brand/', brandLanguagesRouter);
 app.use('/api/v1/category/',categoryLanguagesRouter);

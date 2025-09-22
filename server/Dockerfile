@@ -25,5 +25,13 @@ USER appuser
 # Expose port 
 EXPOSE 4000
 
+# Environment variables (can be overridden at runtime)
+ENV PORT=4000
+ENV NODE_ENV=production
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "const http = require('http'); http.get('http://localhost:4000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => { process.exit(1); });"
+
 # Start app
 CMD ["npm", "start"]
