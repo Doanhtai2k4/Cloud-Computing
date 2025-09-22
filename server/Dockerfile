@@ -1,25 +1,29 @@
 # backend/Dockerfile (JS)
 FROM node:20-alpine
 
-# tạo user non-root (tốt cho security)
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
 WORKDIR /app
 
-# copy package files first (for better caching)
-COPY package*.json ./
+# Copy package files explicitly
+COPY package.json ./
+COPY package-lock.json ./
 
-# install dependencies
+# Install dependencies
 RUN npm ci --production
 
-# copy source code
+# Copy source code
 COPY . .
 
-# expose port 
-EXPOSE 4000
+# Create non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# switch to non-root user
+# Change ownership of app directory
+RUN chown -R appuser:appgroup /app
+
+# Switch to non-root user
 USER appuser
 
-# start app
+# Expose port 
+EXPOSE 4000
+
+# Start app
 CMD ["npm", "start"]

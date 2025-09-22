@@ -34,7 +34,7 @@ Thumbs.db
 # Test coverage
 coverage/
 
-# Dependency lock file (optional)
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Dependency lock file (commented out - we need these for Docker builds)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

@@ -3,8 +3,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files first for better caching
-COPY package*.json ./
+# Copy package files explicitly
+COPY package.json ./
+COPY package-lock.json ./
 
 # Install dependencies
 RUN npm ci
