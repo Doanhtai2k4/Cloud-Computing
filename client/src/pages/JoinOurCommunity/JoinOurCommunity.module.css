@@ -9,13 +9,13 @@
     /* text-align: center; */
     font-size: 1.6rem;
     font-weight: 600;
-    margin-bottom: 40px;
+   
     color: #333;
 }
 
 .flexCommunity {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
     width: 100%;
     height: 100%;

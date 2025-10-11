@@ -189,7 +189,7 @@ const Header = () => {
                             </Link>
                         )}
                         
-                        <Link to="https://github.com/TranChinh2901/stratos_projects_library" className={`${styles.btn} ${styles.btnGithub}`}>
+                        <Link to="https://github.com/Doanhtai2k4" className={`${styles.btn} ${styles.btnGithub}`}>
                             <FaGithub />
                             <span>Star on GitHub</span>
                         </Link>
@@ -312,7 +312,7 @@ const Header = () => {
                             )}
                             
                             <li className={styles.liMobile}>
-                                <Link to="https://github.com/TranChinh2901/stratos_projects_library" className={`${styles.btn} ${styles.btnGithub}`}>
+                                <Link to="https://github.com/Doanhtai2k4" className={`${styles.btn} ${styles.btnGithub}`}>
                                     <FaGithub style={{color:'white'}}/>
                                     <span style={{fontSize: '16px', color:'white', marginLeft:'4px'}}>Star on GitHub</span>
                                 </Link>

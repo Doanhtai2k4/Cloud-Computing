@@ -48,7 +48,7 @@ const HomePage = () => {
               Explore Languages
             </Link>
             <a 
-              href="https://github.com/TranChinh2901/stratos_projects_library" 
+              href="https://github.com/Doanhtai2k4" 
               target="_blank" 
               rel="noopener noreferrer" 
               className={styles.buttonHomeB}

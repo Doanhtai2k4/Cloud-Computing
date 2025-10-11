@@ -56,18 +56,23 @@ const getCategoryLanguagesController = async (req, res) => {
 }
 const updateCategoryLanguageController = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { nameC, imageC, imageBannerC, descriptionC, brandLanguages } = req.body;
+        const { slug } = req.params;
+        const { nameC, imageC, descriptionC, brandLanguages } = req.body;
+        
+        console.log('=== UPDATE DEBUG ===');
+        console.log('Params:', req.params);
+        console.log('Body:', req.body);
 
-        if (!nameC || !imageC || !imageBannerC || !descriptionC || !brandLanguages) {
+        if (!nameC || !imageC || imageC === 'null' || !descriptionC || !brandLanguages) {
             return res.status(400).json({
                 success: false,
-                message: 'All fields are required'
+                message: 'All fields are required (nameC, imageC, descriptionC, brandLanguages)',
+                received: { nameC: !!nameC, imageC: !!imageC, descriptionC: !!descriptionC, brandLanguages: !!brandLanguages }
             });
         }
 
-        const updatedCategory = await categoryLanguagesModel.findByIdAndUpdate(
-            id,
+        const updatedCategory = await categoryLanguagesModel.findOneAndUpdate(
+            { slug: slug },
             {
                 nameC,
                 slug: slugify(nameC, { lower: true }),
@@ -99,8 +104,8 @@ const updateCategoryLanguageController = async (req, res) => {
 }
 const deleteCategoryLanguageController = async (req, res) => {
     try {
-        const { id } = req.params;
-        const deletedCategory = await categoryLanguagesModel.findByIdAndDelete(id);
+        const { slug } = req.params;
+        const deletedCategory = await categoryLanguagesModel.findOneAndDelete({ slug: slug });
         if (!deletedCategory) {
             return res.status(404).json({
                 success: false,

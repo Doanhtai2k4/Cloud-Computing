@@ -69,22 +69,56 @@ const CategoryLanguagesAdmin = () => {
   // Hàm chuyển đổi file thành Base64
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
+      // Kiểm tra file có phải là Blob/File không
+      const actualFile = file.originFileObj || file;
+      if (!actualFile || typeof actualFile.size === 'undefined') {
+        reject(new Error('Invalid file object'));
+        return;
+      }
+      
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(actualFile);
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
 
   const handleSubmit = async (values) => {
+    console.log('=== SUBMIT DEBUG ===');
+    console.log('Form values:', values);
+    console.log('File list:', fileList);
+    console.log('Editing category:', editingCategory);
+    console.log('API URL:', API_URL);
+
     try {
       let imageCBase64 = null;
+      
       if (fileList.length > 0) {
-        // Lấy file đầu tiên từ fileList (người dùng chọn)
-        imageCBase64 = await getBase64(fileList[0].originFileObj);
+        console.log('Converting file to base64...');
+        console.log('File object:', fileList[0]);
+        
+        const currentFile = fileList[0];
+        
+        // Nếu có originFileObj thì là file mới được chọn
+        if (currentFile.originFileObj) {
+          console.log('New file detected, converting to base64...');
+          imageCBase64 = await getBase64(currentFile.originFileObj);
+          console.log('Base64 converted, length:', imageCBase64?.length);
+        } else if (currentFile.url) {
+          // Nếu có url thì là ảnh cũ được load để preview
+          console.log('Using existing image URL/base64');
+          imageCBase64 = currentFile.url;
+        } else {
+          console.log('Invalid file object');
+        }
       } else if (editingCategory && editingCategory.imageC) {
-        // Nếu không có file mới được chọn, giữ lại ảnh cũ (nếu có)
+        // Fallback: sử dụng ảnh từ editingCategory
         imageCBase64 = editingCategory.imageC;
+        console.log('Using existing image from editingCategory');
+      } else {
+        console.log('No image provided - this will cause validation error');
       }
+
+      console.log('Final imageCBase64:', imageCBase64?.substring(0, 50) + '...');
 
       const payload = {
         ...values,
@@ -92,13 +126,20 @@ const CategoryLanguagesAdmin = () => {
         imageC: imageCBase64 // Gửi chuỗi Base64
       };
 
+      console.log('Final payload:', payload);
+
       if (editingCategory) {
         // Update
-        await axios.put(`${API_URL}/api/v1/category/categoryLanguages/${editingCategory.slug}`, payload);
+        console.log('Updating category...');
+        const response = await axios.put(`${API_URL}/api/v1/category/categoryLanguages/${editingCategory.slug}`, payload);
+        console.log('Update response:', response.data);
         message.success('Cập nhật danh mục thành công');
       } else {
         // Create
-        await axios.post(`${API_URL}/api/v1/category/categoryLanguage`, payload);
+        console.log('Creating new category...');
+        console.log('API endpoint:', `${API_URL}/api/v1/category/categoryLanguage`);
+        const response = await axios.post(`${API_URL}/api/v1/category/categoryLanguage`, payload);
+        console.log('Create response:', response.data);
         message.success('Tạo danh mục thành công');
       }
 
@@ -108,16 +149,20 @@ const CategoryLanguagesAdmin = () => {
       setFileList([]); // Reset file list sau khi submit
       fetchCategories();
     } catch (error) {
+      console.error('=== ERROR DEBUG ===');
+      console.error('Error object:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('Full error details:', JSON.stringify(error.response?.data, null, 2));
       message.error(error.response?.data?.message || 'Có lỗi xảy ra');
-      console.error('Lỗi khi submit:', error);
     }
   };
 
   const handleEdit = (category) => {
     setEditingCategory(category);
     form.setFieldsValue({
-      nameCategory: category.nameCategory,
-      descriptionCategory: category.descriptionCategory,
+      nameC: category.nameC,
+      descriptionC: category.descriptionC,
       brandLanguages: category.brandLanguages?._id || category.brandLanguages,
       // Khi chỉnh sửa, nếu có ảnh, set nó vào fileList để hiển thị preview
       // (Không set vào trường form vì Upload không quản lý giá trị qua form.setFieldsValue trực tiếp)
@@ -168,7 +213,16 @@ const CategoryLanguagesAdmin = () => {
         message.error('Ảnh phải nhỏ hơn 2MB!');
         return Upload.LIST_IGNORE;
       }
-      setFileList([file]); // Chỉ cho phép 1 file
+      
+      // Tạo file object cho Ant Design
+      const fileObj = {
+        uid: file.uid || Date.now().toString(),
+        name: file.name,
+        status: 'done',
+        originFileObj: file,
+      };
+      
+      setFileList([fileObj]); // Set với cấu trúc Ant Design
       return false; // Ngăn Ant Design Upload tự động upload
     },
     fileList,
@@ -356,21 +410,10 @@ const CategoryLanguagesAdmin = () => {
               label="Ảnh danh mục"
               rules={[
                 {
-                  validator: async (_, value) => {
-                    // Kiểm tra xem có file nào được chọn không, hoặc đang ở chế độ chỉnh sửa và có ảnh cũ không
-                    if (fileList.length === 0 && (!editingCategory || !editingCategory.imageC)) {
-                      throw new Error('Vui lòng tải lên ảnh danh mục');
-                    }
-                  },
-                },
-              ]}
-              valuePropName="fileList" // Prop này kết nối với fileList của Upload
-              getValueFromEvent={(e) => { // Lấy giá trị từ event của Upload
-                if (Array.isArray(e)) {
-                  return e;
+                  required: !editingCategory, // Chỉ required khi tạo mới
+                  message: 'Vui lòng tải lên ảnh danh mục'
                 }
-                return e?.fileList;
-              }}
+              ]}
             >
               <Upload {...uploadProps}>
                 {fileList.length < 1 && ( // Chỉ hiển thị nút upload nếu chưa có ảnh

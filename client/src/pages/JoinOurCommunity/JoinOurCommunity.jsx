@@ -21,16 +21,16 @@ const JoinOurCommunity = () => {
                     Engage in discussions, ask questions, and get help from fellow 
                     members. Together, we can learn, grow, and make a difference in the world of programming.
                 </p>
-                <a href="https://github.com/TranChinh2901" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
+                <a href="https://github.com/Doanhtai2k4" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
                   <FaGithub/> Github
                 </a>
-                 <a href="https://www.facebook.com/tranchinh04/" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
+                 <a href="https://www.facebook.com/angonzimoto12345" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
                  <MdFacebook/>  Facebook
                 </a>
                  <a href="https://www.linkedin.com/in/ch%C3%ADnh-tr%E1%BA%A7n-vi%E1%BA%BFt-099370355/" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
                   <IoLogoLinkedin/> LinkedIn
                 </a>
-                 <a href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=tranchinht32901@gmail.com" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
+                 <a href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=taida8386@gmail.com" target="_blank" rel="noopener noreferrer" className={styles.joinButton}>
                   <IoMdMail/> Gmail
                 </a>
             </div>

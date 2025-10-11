@@ -83,6 +83,11 @@ const LanguagesAdmin = () => {
   };
 
   const handleSubmit = async (values) => {
+    console.log('=== LANGUAGES SUBMIT DEBUG ===');
+    console.log('Form values:', values);
+    console.log('Editing language:', editingLanguage);
+    console.log('API URL:', API_URL);
+
     try {
       const payload = {
         name: values.name,
@@ -93,11 +98,18 @@ const LanguagesAdmin = () => {
         brandLanguages: values.brandLanguages 
       };
 
+      console.log('Final payload:', payload);
+
       if (editingLanguage) {
-        await axios.put(`${API_URL}/api/v1/language/languages/${editingLanguage.slug}`, payload);
+        console.log('Updating language...');
+        const response = await axios.put(`${API_URL}/api/v1/language/languages/${editingLanguage.slug}`, payload);
+        console.log('Update response:', response.data);
         message.success('Cập nhật ngôn ngữ thành công');
       } else {
-        await axios.post(`${API_URL}/api/v1/language/languages`, payload);
+        console.log('Creating new language...');
+        console.log('API endpoint:', `${API_URL}/api/v1/language/languages`);
+        const response = await axios.post(`${API_URL}/api/v1/language/languages`, payload);
+        console.log('Create response:', response.data);
         message.success('Tạo ngôn ngữ thành công');
       }
 
@@ -106,8 +118,11 @@ const LanguagesAdmin = () => {
       form.resetFields();
       fetchLanguages();
     } catch (error) {
+      console.error('=== LANGUAGES ERROR DEBUG ===');
+      console.error('Error object:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
       message.error(error.response?.data?.message || 'Có lỗi xảy ra');
-      console.error('Lỗi khi submit:', error);
     }
   };
 
@@ -300,6 +315,7 @@ const LanguagesAdmin = () => {
               name="description"
               label="Mô tả ngôn ngữ"
               rules={[
+                { required: true, message: 'Vui lòng nhập mô tả' },
                 { max: 1000, message: 'Mô tả không được vượt quá 1000 ký tự' }
               ]}
             >
@@ -315,6 +331,7 @@ const LanguagesAdmin = () => {
               name="answer"
               label="Câu trả lời/Giải thích"
               rules={[
+                { required: true, message: 'Vui lòng nhập câu trả lời' },
                 { max: 2000, message: 'Câu trả lời không được vượt quá 2000 ký tự' }
               ]}
             >
@@ -360,7 +377,7 @@ const LanguagesAdmin = () => {
               </Select>
             </Form.Item>
 
-            {/* <Form.Item
+            <Form.Item
               name="brandLanguages"
               label="Thương hiệu"
               rules={[
@@ -381,7 +398,7 @@ const LanguagesAdmin = () => {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item> */}
+            </Form.Item>
 
             <Form.Item className={styles.formActions}>
               <Space>
