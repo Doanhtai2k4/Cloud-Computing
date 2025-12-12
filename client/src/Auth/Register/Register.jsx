@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import API_URL from '../../config/api';
 import Layout from '../../components/Layout/Layout';
 import { 
     Form, 
@@ -20,7 +21,6 @@ import {
 } from '@ant-design/icons';
 import toast from 'react-hot-toast';
 
-const API_URL = import.meta.env.VITE_API;
 const { Title } = Typography;
 
 const Register = () => {

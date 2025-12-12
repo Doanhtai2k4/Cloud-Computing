@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './ProgramLanguages.module.css';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API;
+import API_URL from '../../config/api';
 
 const ProgramLanguages = () => {
     const { slug } = useParams();
