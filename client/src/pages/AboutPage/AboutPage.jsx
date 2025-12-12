@@ -129,12 +129,14 @@ const AboutPage = () => {
                         <Counter to={countCategories > 0 ? countCategories : 1000} duration={1500} /> 
                         <h4>Categories</h4> 
                     </div>
-                    <div className={styles.aboutDescription}>
-                        <p>The Algorithms is the largest open-source algorithm library on GitHub, backed by an <br /> active community of developers worldwide.</p>
-                    </div>
+                </div>
 
-                    <div data-aos="zoom-in" className={styles.flexAboutBox}>
-                            <div  className={styles.inFlexAboutBox}>
+                <div className={styles.aboutDescription}>
+                    <p>The Algorithms is the largest open-source algorithm library on GitHub, backed by an <br /> active community of developers worldwide.</p>
+                </div>
+
+                <div data-aos="zoom-in" className={styles.flexAboutBox}>
+                    <div  className={styles.inFlexAboutBox}>
                                 <FaCircleCheck/>
                                 <p>Clear, well-documented implementations in multiple programming languages</p>
                             </div>
@@ -154,13 +156,11 @@ const AboutPage = () => {
                                 <FaCircleCheck/>
                                 <p>Regular updates and maintenance by expert developers </p>
                             </div>
-                             <div className={styles.inFlexAboutBox}>
-                                <FaCircleCheck/>
-                                <p>Cross-platform compatibility and optimized implementations</p>
-                            </div>
+                    <div className={styles.inFlexAboutBox}>
+                        <FaCircleCheck/>
+                        <p>Cross-platform compatibility and optimized implementations</p>
                     </div>
                 </div>
-            
             </div>
         </div>
     );

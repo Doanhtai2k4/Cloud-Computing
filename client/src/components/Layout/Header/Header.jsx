@@ -4,6 +4,7 @@ import { FaGithub, FaChevronDown, FaBars, FaTimes, FaUser } from 'react-icons/fa
 import { MdLogin, MdLogout, MdDashboard, MdPerson } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import ThemeToggle from '../../ThemeToggle/ThemeToggle';
 import toast from 'react-hot-toast';
 
 const Header = () => {
@@ -146,6 +147,7 @@ const Header = () => {
                     </ul>
 
                     <div className={styles.desktopActions}>
+                        <ThemeToggle />
                         {auth?.user ? (
                             <div 
                                 className={styles.userDropdownContainer}

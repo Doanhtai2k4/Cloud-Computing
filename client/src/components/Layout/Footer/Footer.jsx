@@ -32,7 +32,7 @@ const Footer = () => {
         </div>
       </div>
       <div className={styles.copyright}>
-        <p>© 2025 The Algorithms of Tran Viet Chinh. All rights reserved.</p>
+        <p>© 2025 The Algorithms of Do Anh Tai. All rights reserved.</p>
       </div>
     </footer>
   );

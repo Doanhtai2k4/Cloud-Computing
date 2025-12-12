@@ -2,16 +2,27 @@
 
 .containerContribute {
     width: 100%;
-    margin-top: 160px;
-    padding: 20px;
+    margin-top: 40px;
+    padding: 50px 20px;
     box-sizing: border-box;
 }
 
 .containerContribute h2 {
-    font-weight: 600; 
-    color: #333;
-    font-size: 1.6rem;
-    margin-bottom: 40px;
+    font-weight: 800;
+    color: var(--text-primary);
+    font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+    margin-bottom: 35px;
+    letter-spacing: -0.02em;
+}
+
+[data-theme="dark"] .containerContribute h2 {
+    /* Green → Blue */
+background: linear-gradient(135deg, #c5e7f1 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradientText 4s ease infinite;
 }
 
 .flexContribute {

@@ -90,6 +90,44 @@ const PopularAlgo = () => {
                         </li>
                     </ul>
             </div>
+              <div className={styles.popularItems} data-aos="fade-up">
+                    <ul>
+                        <li ><BsSortDown className={styles.iconPopularAlgo}/></li>
+                        <li className={styles.titlePopularAlgo}>Dynamic Programming</li>
+                        <li>Fibonacci Sequence</li>
+                        <li>Knapsack Problem</li>
+                        <li>Longest Common Subsequence</li>
+                        <li>Matrix Chain Multiplication</li>
+                        <li>Edit Distance</li>
+                        <li>Coin Change Problem</li>
+                        <li>Longest Increasing Subsequence</li>
+                        <li>Partition Problem</li>
+                        <li>
+                            <button className={styles.buttonPopular} >
+                                    <Link className={styles.linkPopular} to={'https://ducchinhpro123.github.io/dsa/'}>Learn more</Link>
+                                 </button>
+                        </li>
+                    </ul>
+            </div>
+              <div className={styles.popularItems} data-aos="fade-up">
+                    <ul>
+                        <li ><IoIosSearch className={styles.iconPopularAlgo}/></li>
+                        <li className={styles.titlePopularAlgo}>String Algorithms</li>
+                        <li>Pattern Matching</li>
+                        <li>KMP Algorithm</li>
+                        <li>Rabin-Karp Algorithm</li>
+                        <li>Boyer-Moore Algorithm</li>
+                        <li>Z Algorithm</li>
+                        <li>Suffix Array</li>
+                        <li>Longest Palindromic Substring</li>
+                        <li>String Hashing</li>
+                        <li>
+                            <button className={styles.buttonPopular} >
+                                    <Link className={styles.linkPopular} to={'https://ducchinhpro123.github.io/dsa/'}>Learn more</Link>
+                                 </button>
+                        </li>
+                    </ul>
+            </div>
         </div>
     </div>
   )

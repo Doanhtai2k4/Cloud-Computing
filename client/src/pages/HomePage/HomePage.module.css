@@ -1,103 +1,252 @@
 .containerHome{
     margin: 0 auto;
     width: 100%;
-    max-width: 1200px;
-    box-sizing: border-box;
+    max-width: 1400px;
+    padding: 0 var(--spacing-lg);
 }
+
 .inContainerHome{
-     text-align: center;
-    background: #f8f8f8;
+    text-align: center;
+    background: var(--gradient-hero);
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 60px var(--spacing-xl) 70px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 0 24px 24px;
+    min-height: auto;
 }
+
+/* Animated Background Pattern */
+.inContainerHome::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Floating Geometric Shapes */
+.inContainerHome::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatShape 25s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes floatShape {
+    0%, 100% { 
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% { 
+        transform: translate(-50px, 50px) rotate(180deg);
+        opacity: 0.2;
+    }
+}
+
 .inContainerHome h1{
-    font-size: 3.5rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: bold;
-    margin-top: 45px;
-    
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    color: #ffffff;
+    margin-bottom: 16px;
+    margin-top: 0;
+    font-weight: 800;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 1;
+    line-height: 1.15;
+    animation: fadeInUp 0.8s ease-out;
 }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .inContainerHome p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 20px;
-    max-width: 800px;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 32px;
+    max-width: 650px;
+    line-height: 1.65;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 1;
+    font-weight: 400;
+    animation: fadeInUp 1s ease-out 0.2s backwards;
 }
 .buttonContainerHome{
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    gap: 20px;
-
+    gap: var(--spacing-lg);
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+    animation: fadeInUp 1.2s ease-out 0.4s backwards;
 }
+
 .buttonHomeA{
-    background-color: #0366D6;
-    color: white;
-    padding: 15px 20px;
+    background: #ffffff;
+    color: var(--primary-color);
+    padding: 18px 40px;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--radius-xl);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.125rem;
     text-decoration: none;
-    font-weight: bold;
-}
-.buttonHomeA:hover{
-    background-color: #0056b3;
-}
-.buttonHomeB{
-    background-color: #e9e9e9;
-    color: black;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    text-decoration: none;
-    font-weight: bold;
-}
-.buttonHomeB:hover{
-    background-color: #8da592;
+    font-weight: 700;
+    transition: all var(--transition-normal);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Tablet Responsiveness */
+.buttonHomeA::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.buttonHomeA:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.buttonHomeA:hover::before {
+    opacity: 1;
+}
+
+.buttonHomeA:active {
+    transform: translateY(-2px);
+}
+
+.buttonHomeB{
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 18px 40px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    font-size: 1.125rem;
+    text-decoration: none;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.buttonHomeB::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.buttonHomeB:hover{
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.buttonHomeB:hover::before {
+    opacity: 1;
+}
+
+.buttonHomeB:active {
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .inContainerHome {
+        padding: 80px var(--spacing-lg);
+        min-height: 60vh;
+        border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    }
+}
+
 @media screen and (max-width: 768px) {
-    .inContainerHome h1 {
-        font-size: 2.5rem;
+    .containerHome {
+        padding: 0 var(--spacing-md);
     }
     
-    .inContainerHome p {
-        font-size: 1rem;
-        padding: 0 15px;
+    .inContainerHome {
+        padding: 60px var(--spacing-md);
+        min-height: 55vh;
+    }
+    
+    .inContainerHome::after {
+        width: 500px;
+        height: 500px;
+        top: -30%;
+        right: -30%;
     }
     
     .buttonContainerHome {
-        gap: 10px;
+        gap: var(--spacing-md);
     }
     
     .buttonHomeA, .buttonHomeB {
-        padding: 12px 15px;
-        font-size: 0.9rem;
+        padding: 15px 28px;
+        font-size: 1rem;
+        border-radius: var(--radius-lg);
     }
 }
 
-/* Mobile Responsiveness */
 @media screen and (max-width: 480px) {
     .containerHome {
-        padding: 15px;
+        padding: 0;
     }
     
-    .inContainerHome h1 {
-        font-size: 1.8rem;
-        margin-top: 10px;
+    .inContainerHome {
+        padding: 50px var(--spacing-md);
+        min-height: 50vh;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     }
     
     .inContainerHome p {
-        font-size: 1rem;
+        font-size: 1.05rem;
         margin-bottom: 15px;
     }
     

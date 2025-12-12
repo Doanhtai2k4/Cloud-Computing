@@ -1,16 +1,29 @@
 .programLanguagesContainer{
-    margin-top: 160px;
+   
     max-width: 1200px;
     width: 100%;
+    padding: 20px 0;
 }
 .programLanguagesContent{
     max-width: 1200px;
     width: 100%;
 }
 .programLanguagesContent h2{
-    font-weight: bold;
-    color: #333;
-    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+    margin-bottom: 35px;
+    letter-spacing: -0.02em;
+}
+
+[data-theme="dark"] .programLanguagesContent h2{
+    /* Green → Blue */
+background: linear-gradient(135deg, #e9b5f0 0%, #c5fdb9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradientText 4s ease infinite;
 }
 .languagesList{
     display: flex;

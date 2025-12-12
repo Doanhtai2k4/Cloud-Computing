@@ -3,7 +3,7 @@
     max-width: 900px;
     margin: 0 auto;
     margin-top: 40px;
-    padding: 0 15px;
+    padding: 30px 15px;
     box-sizing: border-box;
 }
 
@@ -26,17 +26,32 @@
 
 .leftViewTeam h3 {
     margin-bottom: 15px;
+    color: var(--text-primary);
 }
 
 .leftViewTeam button {
     padding: 10px 20px;
-    border: 1px solid #c7c7c7;
-    /* border: none; */
-    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: all var(--transition-normal);
+}
+
+[data-theme="dark"] .leftViewTeam button {
+    color: #f3f6ce;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.leftViewTeam button:hover {
+    transform: translateX(-3px);
+    box-shadow: var(--shadow-md);
 }
 
 .rightViewTeam {

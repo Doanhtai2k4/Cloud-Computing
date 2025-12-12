@@ -1,20 +1,19 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f9fafb; /* Light gray background */
-}
 .header {
-    background-color: #fff;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 50;
     width: 100%;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.header:hover {
+    box-shadow: var(--shadow-md);
 }
 .container {
     max-width: 1200px;
@@ -31,15 +30,28 @@ body {
     align-items: center;
     gap: 0.75rem;
     text-decoration: none;
-    color: #111827;
-    font-weight: 600;
-    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    transition: all var(--transition-fast);
 }
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
 .logoIcon img{
     width: 40px;
     height: 40px;
-    background: linear-gradient(to bottom right, #2dd4bf, #06b6d4);
-    border-radius: 8px;
+    background: var(--gradient-primary);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+    transition: all var(--transition-fast);
+}
+
+.logoIcon img:hover {
+    box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.4);
+    transform: rotate(-5deg);
 }
 .desktopNav {
     display: none;
@@ -51,12 +63,29 @@ body {
 }
 .desktopNav li a {
     text-decoration: none;
-    color: #2a2a2b;
-    font-weight: 500;
-    transition: color 0.2s ease-in-out;
+    color: var(--text-primary);
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    position: relative;
 }
+
+.desktopNav li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: width var(--transition-normal);
+}
+
+.desktopNav li a:hover::after {
+    width: 100%;
+}
+
 .desktopNav li a:hover {
-    color: #111827;
+    color: var(--primary-color);
 }
 .dropdownLink {
     display: flex;
@@ -95,33 +124,48 @@ body {
 }
 .desktopActions {
     display: none;
-    gap: 0.75rem;
+    gap: 1rem;
+    align-items: center;
 }
+
 .btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.8rem 1rem;
-    border-radius: 5px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
     text-decoration: none;
     color: #fff;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.875rem;
-    transition: background-color 0.2s ease-in-out;
-    border: none;
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
     cursor: pointer;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
 }
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
 .btnDiscord {
-    background-color: #979aa3;
+    background: var(--gradient-primary);
+    border-color: rgba(255, 255, 255, 0.2);
 }
+
 .btnDiscord:hover {
-    background-color: #4f46e5;
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
 }
+
 .btnGithub {
-    background-color: #24292E;
+    background: rgba(36, 41, 46, 0.9);
+    backdrop-filter: blur(10px);
 }
+
 .btnGithub:hover {
-    background-color: #1f2937;
+    background: #1f2937;
 }
 .mobileMenuToggle {
     display: block;

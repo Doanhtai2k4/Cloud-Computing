@@ -1,59 +1,109 @@
 .containerPopularAlgo{
-    margin-top: 160px;
+    padding: 60px 0 50px;
+    background: var(--bg-secondary);
 }
-.containerPopularAlgo h2{font-weight: bold;
-    color: #333;
-    font-size: 1.5rem;
+
+.containerPopularAlgo h2{
+    font-weight: 800;
+    color: var(--text-primary);
+    font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
 }
+
+[data-theme="dark"] .containerPopularAlgo h2{
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradientText 4s ease infinite;
+}
+
+.containerPopularAlgo > div > p {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .listPopular{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
 }
+
 .popularItems{
-    margin-top: 15px;
     cursor: pointer;
-    flex: 1;
-   width: 100%;
-   background-color: white;
-   border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    padding: 28px 24px;
+    transition: all var(--transition-normal);
 }
 .popularItems ul{
     list-style: none;
     padding: 0;
     margin: 0;
 }
+.popularItems:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(var(--primary-rgb), 0.3);
+}
+
 .popularItems li{
-    line-height: 1.9;
-    color: #586069;
+    line-height: 2;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
 }
+
 .iconPopularAlgo{
-    font-size: 45px;
-    margin-right: 10px;
+    font-size: 40px;
+    margin-right: 12px;
     vertical-align: middle;
-      color: #0366D6;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
+
 .titlePopularAlgo{
-    font-size: 19px;
-    margin-bottom: 10px;
-    font-weight: bold;
-      color: #333 !important;
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+    font-weight: 700;
+    color: var(--text-primary) !important;
 }
 .buttonPopular{
-  width: 100%;
-  margin-top: 8px;
-    background-color:#0366D6;
+    width: 100%;
+    margin-top: 16px;
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    border-radius: 5px;
-    font-weight: 500;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 12px 20px;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
 }
+
+.buttonPopular:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
 .buttonPopular .linkPopular {
-     color: white;
-     text-decoration: none;
+    color: white;
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
