@@ -1,0 +1,80 @@
+# Render Blueprint for Infrastructure as Code
+# Automatically deploys and configures services on Render
+
+services:
+  # ===================================
+  # Backend Web Service
+  # ===================================
+  - type: web
+    name: mern-backend
+    runtime: docker
+    region: singapore
+    plan: starter
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: MONGO_URL
+        sync: false # Set via dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CHATBOT_API_KEY
+        sync: false
+
+    healthCheckPath: /api/health
+
+    autoDeploy: true
+
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 80
+      targetCPUPercent: 70
+
+  # ===================================
+  # Frontend Static Site
+  # ===================================
+  - type: web
+    name: mern-frontend
+    runtime: docker
+    region: singapore
+    plan: starter
+    dockerfilePath: ./client/Dockerfile
+    dockerContext: ./client
+
+    envVars:
+      - key: VITE_API
+        fromService:
+          name: mern-backend
+          type: web
+          property: host
+
+    healthCheckPath: /
+
+    autoDeploy: true
+
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=31536000
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-XSS-Protection
+        value: 1; mode=block
+# ===================================
+# Databases (if using Render managed)
+# ===================================
+# databases:
+#   - name: mongodb
+#     plan: starter
+#     region: singapore
+#     ipAllowList: []
