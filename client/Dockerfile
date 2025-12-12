@@ -10,10 +10,13 @@ COPY package-lock.json ./
 # Install dependencies
 RUN npm ci
 
+# Copy environment file
+COPY .env.production ./.env.production
+
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application with production env
 RUN npm run build
 
 # Production stage
