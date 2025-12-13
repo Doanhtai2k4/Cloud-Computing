@@ -142,11 +142,57 @@ const countBlogLanguagesController = async (req,res) => {
         });
     }
 }
+
+const searchBlogLanguagesController = async (req, res) => {
+    try {
+        const { keyword, sort } = req.query;
+        
+        // Build search query
+        let query = {};
+        
+        // Search by keyword in title or content
+        if (keyword) {
+            query.$or = [
+                { title: { $regex: keyword, $options: 'i' } },
+                { content: { $regex: keyword, $options: 'i' } }
+            ];
+        }
+        
+        // Build sort options
+        let sortOptions = {};
+        if (sort === 'newest') {
+            sortOptions.createdAt = -1;
+        } else if (sort === 'oldest') {
+            sortOptions.createdAt = 1;
+        } else if (sort === 'title') {
+            sortOptions.title = 1;
+        } else {
+            sortOptions.createdAt = -1; // default newest
+        }
+        
+        const blogs = await blogLanguagesModel.find(query).sort(sortOptions);
+        
+        return res.status(200).json({
+            success: true,
+            message: 'Search results fetched successfully',
+            data: blogs,
+            count: blogs.length
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Error searching blogs',
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     createBlogLanguagesController,
     getAllBlogLanguagesController,
     getBlogLanguageByIdController,
     updateBlogLanguagesController,
     deleteBlogLanguagesController,
-    countBlogLanguagesController
+    countBlogLanguagesController,
+    searchBlogLanguagesController
 }

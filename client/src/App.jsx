@@ -9,6 +9,7 @@ import UserRoute from "./Router/UserRoute";
 import AdminRoute from "./Router/AdminRoute";
 import Profile from "./pages/Profile/Profile";
 import SavedPosts from "./pages/SavedPosts/SavedPosts";
+import SearchPage from "./pages/SearchPage/SearchPage";
 import CategoryLanguages from "./pages/ProgramLanguages/CategoryLanguages/CategoryLanguages";
 import MainBlogLanguages from "./pages/ProgramLanguages/CategoryLanguages/BlogLanguages/MainBlogLanguages";
 import Languages from "./pages/ProgramLanguages/CategoryLanguages/Languages/Languages";
@@ -31,6 +32,7 @@ const App = () => {
       <Router>
         <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/category/:slug" element={<CategoryLanguages />} />
         <Route path="/blog/:id" element={<MainBlogLanguages />} />
         <Route path="/languages/by-category/:slug" element={<Languages />} />

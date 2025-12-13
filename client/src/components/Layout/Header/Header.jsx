@@ -84,6 +84,11 @@ const Header = () => {
 
                     <ul className={styles.desktopNav}>
                         <li>
+                            <Link to="/search">
+                                Tìm kiếm
+                            </Link>
+                        </li>
+                        <li>
                             <Link 
                                 to="/" 
                                 onClick={(e) => handleNavClick(e, '/about', 'about-section')}
