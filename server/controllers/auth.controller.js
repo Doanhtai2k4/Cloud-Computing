@@ -199,6 +199,79 @@ const updateUserController = async (req, res) => {
         })
     }
 }
+// Toggle bookmark post
+const toggleBookmarkController = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.user._id;
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy người dùng'
+            });
+        }
+
+        const postIdString = postId.toString();
+        const bookmarkIndex = user.savedPosts.findIndex(
+            savedPostId => savedPostId.toString() === postIdString
+        );
+
+        if (bookmarkIndex > -1) {
+            // Remove bookmark
+            user.savedPosts.splice(bookmarkIndex, 1);
+        } else {
+            // Add bookmark
+            user.savedPosts.push(postId);
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: bookmarkIndex > -1 ? 'Đã bỏ lưu bài viết' : 'Đã lưu bài viết',
+            savedPosts: user.savedPosts,
+            isBookmarked: bookmarkIndex === -1
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Lỗi toggle bookmark',
+            error: error.message
+        });
+    }
+};
+
+// Get user's saved posts
+const getSavedPostsController = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        
+        const user = await userModel.findById(userId)
+            .populate('savedPosts');
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy người dùng'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Lấy danh sách bài viết đã lưu thành công',
+            savedPosts: user.savedPosts
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Lỗi lấy danh sách bài viết đã lưu',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     registerController,
     loginController,
@@ -206,5 +279,7 @@ module.exports = {
     getUserByIdController,
     countUsersController,
     deleteUserController,
-    updateUserController
+    updateUserController,
+    toggleBookmarkController,
+    getSavedPostsController
 };

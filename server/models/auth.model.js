@@ -32,7 +32,11 @@ const userSchema = new mongoose.Schema({
     github:{
         type: String,
         required: true
-    }
+    },
+    savedPosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BlogLanguage'
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
