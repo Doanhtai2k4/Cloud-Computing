@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { App as AntApp } from 'antd';
 import HomePage from "./pages/HomePage/HomePage";
 import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import Login from "./Auth/Login/Login";
@@ -26,8 +27,9 @@ import Users from "./pages/Admin/Users/Users";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
+    <AntApp>
+      <Router>
+        <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/category/:slug" element={<CategoryLanguages />} />
         <Route path="/blog/:id" element={<MainBlogLanguages />} />
@@ -88,8 +90,9 @@ const App = () => {
         </Route>
 
         <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </AntApp>
   );
 };
 

@@ -24,8 +24,9 @@ const BlogLanguages = () => {
 
         const getSavedPosts = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (token) {
+                const authData = localStorage.getItem('auth');
+                if (authData) {
+                    const { token } = JSON.parse(authData);
                     const response = await axios.get(`${API_URL}/api/v1/auth/saved-posts`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
@@ -50,9 +51,17 @@ const BlogLanguages = () => {
         e.stopPropagation();
         e.preventDefault();
         
-        const token = localStorage.getItem('token');
+        const authData = localStorage.getItem('auth');
+        if (!authData) {
+            message.warning('Vui lòng đăng nhập để lưu bài viết');
+            navigate('/login');
+            return;
+        }
+
+        const { token } = JSON.parse(authData);
         if (!token) {
             message.warning('Vui lòng đăng nhập để lưu bài viết');
+            navigate('/login');
             return;
         }
 
@@ -64,7 +73,9 @@ const BlogLanguages = () => {
             );
 
             if (response.data.success) {
-                message.success(response.data.message);
+                // Show success notification
+                alert(response.data.message);
+                console.log('✅ Bookmark success:', response.data);
                 
                 // Update savedPosts state immediately
                 if (response.data.isBookmarked) {
@@ -88,7 +99,7 @@ const BlogLanguages = () => {
                     <div key={blog._id} className={styles.blogCardIn} onClick={() => handleClickToBlog(blog)}>
                         <div className={styles.bookmarkIcon} onClick={(e) => handleBookmark(e, blog._id)}>
                             {isBookmarked ? (
-                                <BookFilled style={{ color: '#4096ff', fontSize: '20px' }} />
+                                <BookFilled style={{ color: '#52c41a', fontSize: '20px' }} />
                             ) : (
                                 <BookOutlined style={{ fontSize: '20px' }} />
                             )}

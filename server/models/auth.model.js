@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     },
     savedPosts: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'BlogLanguage'
+        ref: 'BlogLanguages'
     }]
 }, { timestamps: true });
 

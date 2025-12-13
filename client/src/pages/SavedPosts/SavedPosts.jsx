@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BookFilled, DeleteOutlined } from '@ant-design/icons';
 import { message, Empty } from 'antd';
+import Layout from '../../components/Layout/Layout';
 import styles from './SavedPosts.module.css';
 
 const API_URL = import.meta.env.VITE_API;
@@ -18,9 +19,16 @@ const SavedPosts = () => {
 
     const fetchSavedPosts = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const authData = localStorage.getItem('auth');
+            if (!authData) {
+                alert('Vui lòng đăng nhập');
+                navigate('/login');
+                return;
+            }
+
+            const { token } = JSON.parse(authData);
             if (!token) {
-                message.warning('Vui lòng đăng nhập');
+                alert('Vui lòng đăng nhập');
                 navigate('/login');
                 return;
             }
@@ -33,7 +41,7 @@ const SavedPosts = () => {
                 setSavedPosts(response.data.savedPosts);
             }
         } catch (error) {
-            message.error('Lỗi khi tải bài viết đã lưu');
+            alert('Lỗi khi tải bài viết đã lưu');
             console.log(error);
         } finally {
             setLoading(false);
@@ -45,7 +53,10 @@ const SavedPosts = () => {
         e.preventDefault();
 
         try {
-            const token = localStorage.getItem('token');
+            const authData = localStorage.getItem('auth');
+            if (!authData) return;
+            
+            const { token } = JSON.parse(authData);
             const response = await axios.post(
                 `${API_URL}/api/v1/auth/bookmark/${postId}`,
                 {},
@@ -53,11 +64,11 @@ const SavedPosts = () => {
             );
 
             if (response.data.success) {
-                message.success('Đã bỏ lưu bài viết');
+                alert('Đã bỏ lưu bài viết');
                 setSavedPosts(savedPosts.filter(post => post._id !== postId));
             }
         } catch (error) {
-            message.error('Lỗi khi bỏ lưu bài viết');
+            alert('Lỗi khi bỏ lưu bài viết');
         }
     };
 
@@ -66,47 +77,53 @@ const SavedPosts = () => {
     };
 
     if (loading) {
-        return <div className={styles.loading}>Đang tải...</div>;
+        return (
+            <Layout>
+                <div className={styles.loading}>Đang tải...</div>
+            </Layout>
+        );
     }
 
     return (
-        <div className={styles.savedPostsContainer}>
-            <div className={styles.header}>
-                <h1><BookFilled style={{ color: '#4096ff', marginRight: '12px' }} />Bài viết đã lưu</h1>
-                <p>Danh sách {savedPosts.length} bài viết bạn đã lưu</p>
-            </div>
-
-            {savedPosts.length === 0 ? (
-                <Empty
-                    description="Chưa có bài viết nào được lưu"
-                    style={{ marginTop: '60px' }}
-                />
-            ) : (
-                <div className={styles.postsGrid}>
-                    {savedPosts.map((post) => (
-                        <div
-                            key={post._id}
-                            className={styles.postCard}
-                            onClick={() => handleClickToBlog(post)}
-                        >
-                            <div
-                                className={styles.removeIcon}
-                                onClick={(e) => handleRemoveBookmark(e, post._id)}
-                            >
-                                <DeleteOutlined style={{ fontSize: '18px', color: '#ff4d4f' }} />
-                            </div>
-                            <img src={post.image} alt={post.title} />
-                            <div className={styles.postContent}>
-                                <h3>{post.title}</h3>
-                                <p className={styles.description}>
-                                    {post.description?.substring(0, 120)}...
-                                </p>
-                            </div>
-                        </div>
-                    ))}
+        <Layout>
+            <div className={styles.savedPostsContainer}>
+                <div className={styles.header}>
+                    <h1><BookFilled style={{ color: '#4096ff', marginRight: '12px' }} />Bài viết đã lưu</h1>
+                    <p>Danh sách {savedPosts.length} bài viết bạn đã lưu</p>
                 </div>
-            )}
-        </div>
+
+                {savedPosts.length === 0 ? (
+                    <Empty
+                        description="Chưa có bài viết nào được lưu"
+                        style={{ marginTop: '60px' }}
+                    />
+                ) : (
+                    <div className={styles.postsGrid}>
+                        {savedPosts.map((post) => (
+                            <div
+                                key={post._id}
+                                className={styles.postCard}
+                                onClick={() => handleClickToBlog(post)}
+                            >
+                                <div
+                                    className={styles.removeIcon}
+                                    onClick={(e) => handleRemoveBookmark(e, post._id)}
+                                >
+                                    <DeleteOutlined style={{ fontSize: '18px', color: '#ff4d4f' }} />
+                                </div>
+                                <img src={post.image} alt={post.title} />
+                                <div className={styles.postContent}>
+                                    <h3>{post.title}</h3>
+                                    <p className={styles.description}>
+                                        {post.description?.substring(0, 120)}...
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </Layout>
     );
 };
 
