@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Input, Button, message } from 'antd';
-import { DeleteOutlined, MessageOutlined } from '@ant-design/icons';
+import { DeleteOutlined, MessageOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import styles from './CommentSection.module.css';
@@ -145,10 +145,42 @@ const CommentSection = ({ blogId }) => {
         }
     };
 
+    const handleLikeComment = async (commentId) => {
+        if (!user) {
+            message.warning('Vui lòng đăng nhập để thích bình luận');
+            return;
+        }
+
+        try {
+            const authData = JSON.parse(localStorage.getItem('auth') || '{}');
+            const token = authData.token;
+            const response = await axios.post(
+                `${API_URL}/api/v1/comments/${commentId}/like`,
+                {},
+                {
+                    headers: {
+                        Authorization: token
+                    }
+                }
+            );
+
+            if (response.data.success) {
+                fetchComments(); // Refresh để update likes
+            }
+        } catch (error) {
+            message.error('Lỗi khi thích bình luận');
+            console.error(error);
+        }
+    };
+
     const renderComment = (comment, isReply = false) => {
         const isOwner = user && comment.userId._id === user._id;
         const isAdmin = user && (user.role === 1 || user.role === 'admin');
         const canDelete = isOwner || isAdmin;
+        
+        // Check if current user liked this comment
+        const isLiked = user && comment.likes && comment.likes.includes(user._id);
+        const likeCount = comment.likes ? comment.likes.length : 0;
 
         return (
             <div key={comment._id} className={isReply ? styles.replyComment : styles.comment}>
@@ -162,6 +194,16 @@ const CommentSection = ({ blogId }) => {
                 <p className={styles.commentContent}>{comment.content}</p>
                 
                 <div className={styles.commentActions}>
+                    <Button
+                        type="link"
+                        size="small"
+                        icon={isLiked ? <HeartFilled style={{ color: '#ff4d4f' }} /> : <HeartOutlined />}
+                        onClick={() => handleLikeComment(comment._id)}
+                        className={styles.likeButton}
+                    >
+                        {likeCount > 0 && <span className={styles.likeCount}>{likeCount}</span>}
+                    </Button>
+                    
                     <Button
                         type="link"
                         size="small"

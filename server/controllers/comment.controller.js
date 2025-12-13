@@ -137,8 +137,56 @@ const deleteCommentController = async (req, res) => {
     }
 };
 
+// Like/Unlike comment
+const likeCommentController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user._id;
+
+        const comment = await Comment.findById(id);
+        if (!comment) {
+            return res.status(404).json({
+                success: false,
+                message: 'Comment not found'
+            });
+        }
+
+        // Check if user already liked
+        const userIdString = userId.toString();
+        const likeIndex = comment.likes.findIndex(likeId => likeId.toString() === userIdString);
+        
+        if (likeIndex > -1) {
+            // Unlike - remove userId
+            comment.likes.splice(likeIndex, 1);
+        } else {
+            // Like - add userId
+            comment.likes.push(userId);
+        }
+
+        await comment.save();
+
+        return res.status(200).json({
+            success: true,
+            message: likeIndex > -1 ? 'Comment unliked successfully' : 'Comment liked successfully',
+            data: {
+                commentId: comment._id,
+                likes: comment.likes,
+                likeCount: comment.likes.length,
+                isLiked: likeIndex === -1
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Error toggling like',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     createCommentController,
     getCommentsByBlogController,
-    deleteCommentController
+    deleteCommentController,
+    likeCommentController
 };

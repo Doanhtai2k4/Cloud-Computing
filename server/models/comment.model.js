@@ -23,6 +23,10 @@ const commentSchema = new mongoose.Schema({
         ref: 'Comment',
         default: null // null = top-level comment, có giá trị = reply to another comment
     },
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     isDeleted: {
         type: Boolean,
         default: false

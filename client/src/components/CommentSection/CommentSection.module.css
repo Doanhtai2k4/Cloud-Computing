@@ -160,6 +160,24 @@
     }
 }
 
+/* Like Button */
+.likeButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px !important;
+}
+
+.likeCount {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.likeButton:hover .likeCount {
+    color: #ff4d4f;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .commentSection {
