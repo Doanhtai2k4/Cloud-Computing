@@ -1,0 +1,192 @@
+.shareContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.shareButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.shareButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.shareButton:active {
+    transform: translateY(0);
+}
+
+.shareButtons {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    animation: slideDown 0.3s ease;
+    z-index: 100;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.socialButton {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.socialButton:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.socialButton:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.facebook {
+    background: linear-gradient(135deg, #3b5998, #2d4373);
+}
+
+.facebook:hover {
+    background: linear-gradient(135deg, #4c6aaa, #3b5998);
+}
+
+.twitter {
+    background: linear-gradient(135deg, #1DA1F2, #0d8bd9);
+}
+
+.twitter:hover {
+    background: linear-gradient(135deg, #2db5ff, #1DA1F2);
+}
+
+.whatsapp {
+    background: linear-gradient(135deg, #25D366, #1da851);
+}
+
+.whatsapp:hover {
+    background: linear-gradient(135deg, #2ee673, #25D366);
+}
+
+.copy {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.copy:hover {
+    background: linear-gradient(135deg, #7a8ef5, #8759b3);
+}
+
+.toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    color: #52c41a;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 99999;
+    animation: slideDown 0.3s ease, fadeOut 0.3s ease 1.7s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 250px;
+    overflow: hidden;
+}
+
+.toastIcon {
+    font-size: 20px;
+    color: #52c41a;
+}
+
+.progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #52c41a, #73d13d);
+    width: 100%;
+    animation: shrink 2s linear;
+    border-radius: 0 0 8px 8px;
+}
+
+@keyframes shrink {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .shareButtons {
+        left: 50%;
+        transform: translateX(-50%);
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 250px;
+    }
+    
+    .socialButton {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .toast {
+        font-size: 14px;
+        padding: 14px 20px;
+        min-width: 200px;
+    }
+    
+    .toastIcon {
+        font-size: 18px;
+    }
+}
