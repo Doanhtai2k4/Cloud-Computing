@@ -65,7 +65,7 @@ const loginController = async (req, res) => {
                 message: 'Mật khẩu không đúng'
             })
         }
-        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "10d" });
+        const token = await JWT.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "10d" });
         res.status(200).json({
             success: true,
             message: 'Đăng nhập thành công',

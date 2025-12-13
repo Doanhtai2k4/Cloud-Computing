@@ -4,13 +4,19 @@ const userModel = require('../models/auth.model');
 
 const requireSignIn = async (req, res, next) => {
     try {
-        const token = req.headers.authorization;
+        let token = req.headers.authorization;
         if (!token) {
             return res.status(401).json({
                 message: "No token provided",
                 success: false
             })
         }
+        
+        // Remove "Bearer " prefix if exists
+        if (token.startsWith('Bearer ')) {
+            token = token.slice(7);
+        }
+        
         const decoded = JWT.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();

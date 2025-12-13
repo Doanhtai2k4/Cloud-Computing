@@ -8,6 +8,7 @@ const brandLanguagesRouter = require('./routes/brandLanguages.route')
 const categoryLanguagesRouter = require('./routes/categoryLanguages.route');
 const languagesRouter = require('./routes/language.route')
 const blogLanguagesRouter = require('./routes/blogLanguages.route');
+const commentRouter = require('./routes/comment.route');
 
 // Advanced middleware imports
 const { healthCheck, readinessCheck, livenessCheck, metricsCheck } = require('./middleware/healthCheck');
@@ -94,6 +95,7 @@ app.use('/api/v1/brand/', brandLanguagesRouter);
 app.use('/api/v1/category/',categoryLanguagesRouter);
 app.use('/api/v1/language/', languagesRouter);
 app.use('/api/v1/blog/', blogLanguagesRouter);
+app.use('/api/v1/comments', commentRouter);
 
 // Root endpoint
 app.get('/', (req, res) => {
