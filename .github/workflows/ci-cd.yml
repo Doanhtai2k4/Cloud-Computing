@@ -1,8 +1,8 @@
 name: MERN CI/CD Simple
 
 on:
-  # push:
-  #   branches: [master]
+  push:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
