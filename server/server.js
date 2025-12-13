@@ -46,17 +46,19 @@ app.use(cors(corsOptions));
 // Morgan logging (different formats for dev/prod)
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// Rate limiting (protect against DDoS)
-app.use('/api/', rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
-}));
+// Rate limiting (protect against DDoS) - Only in production
+if (process.env.NODE_ENV === 'production') {
+    app.use('/api/', rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100 // limit each IP to 100 requests per windowMs
+    }));
 
-// Stricter rate limit for auth endpoints
-app.use('/api/v1/auth/', rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 20
-}));
+    // Stricter rate limit for auth endpoints
+    app.use('/api/v1/auth/', rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 20
+    }));
+}
 
 // Database connection
 connectDB();

@@ -1,0 +1,355 @@
+.editorWrapper {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-primary);
+  transition: all var(--transition-normal);
+}
+
+.toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.toolbar button {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all var(--transition-fast);
+}
+
+.toolbar button:hover {
+  background: var(--bg-hover);
+  border-color: var(--primary-color);
+}
+
+.toolbar button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.divider {
+  width: 1px;
+  background: var(--border-color);
+  margin: 0 4px;
+}
+
+.textarea {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  padding: 16px !important;
+  border: none !important;
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  resize: vertical !important;
+}
+
+.textarea:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.preview {
+  padding: 20px;
+  min-height: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.8;
+}
+
+.preview h2, .preview h3, .preview h4 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.preview code {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.preview pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.preview pre code {
+  background: none;
+  padding: 0;
+}
+
+.preview ul, .preview ol {
+  padding-left: 24px;
+  margin: 12px 0;
+}
+
+.preview li {
+  margin: 8px 0;
+}
+
+.preview a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.preview img {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  margin: 16px 0;
+}
+
+.hint {
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.editor :global(.ql-toolbar) {
+  background: var(--bg-secondary);
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px;
+}
+
+.editor :global(.ql-container) {
+  border: none;
+  font-size: 16px;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.editor :global(.ql-editor) {
+  padding: 20px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  min-height: 300px;
+}
+
+.editor :global(.ql-editor.ql-blank::before) {
+  color: var(--text-tertiary);
+  font-style: normal;
+}
+
+/* Toolbar buttons */
+.editor :global(.ql-toolbar button) {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.editor :global(.ql-toolbar button:hover) {
+  background: var(--bg-hover);
+}
+
+.editor :global(.ql-toolbar button.ql-active) {
+  background: var(--primary-color);
+  color: white;
+}
+
+.editor :global(.ql-toolbar .ql-stroke) {
+  stroke: var(--text-primary);
+}
+
+.editor :global(.ql-toolbar .ql-fill) {
+  fill: var(--text-primary);
+}
+
+.editor :global(.ql-toolbar button:hover .ql-stroke) {
+  stroke: var(--primary-color);
+}
+
+.editor :global(.ql-toolbar button:hover .ql-fill) {
+  fill: var(--primary-color);
+}
+
+.editor :global(.ql-toolbar button.ql-active .ql-stroke) {
+  stroke: white;
+}
+
+.editor :global(.ql-toolbar button.ql-active .ql-fill) {
+  fill: white;
+}
+
+/* Dropdowns */
+.editor :global(.ql-toolbar .ql-picker) {
+  color: var(--text-primary);
+}
+
+.editor :global(.ql-toolbar .ql-picker-label) {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+}
+
+.editor :global(.ql-toolbar .ql-picker-label:hover) {
+  background: var(--bg-hover);
+}
+
+.editor :global(.ql-toolbar .ql-picker-options) {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+}
+
+.editor :global(.ql-toolbar .ql-picker-item:hover) {
+  background: var(--bg-hover);
+  border-radius: var(--radius-sm);
+}
+
+/* Code blocks */
+.editor :global(.ql-editor pre.ql-syntax) {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+[data-theme="dark"] .editor :global(.ql-editor pre.ql-syntax) {
+  background: #0d1117;
+  border: 1px solid var(--border-color);
+}
+
+/* Blockquotes */
+.editor :global(.ql-editor blockquote) {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 16px;
+  margin: 16px 0;
+  color: var(--text-secondary);
+  font-style: italic;
+  background: var(--bg-secondary);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+}
+
+/* Links */
+.editor :global(.ql-editor a) {
+  color: var(--primary-color);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.editor :global(.ql-editor a:hover) {
+  color: var(--primary-dark);
+}
+
+/* Lists */
+.editor :global(.ql-editor ul),
+.editor :global(.ql-editor ol) {
+  padding-left: 24px;
+  margin: 12px 0;
+}
+
+.editor :global(.ql-editor li) {
+  margin: 8px 0;
+}
+
+/* Images */
+.editor :global(.ql-editor img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: 16px 0;
+}
+
+/* Headings */
+.editor :global(.ql-editor h1),
+.editor :global(.ql-editor h2),
+.editor :global(.ql-editor h3),
+.editor :global(.ql-editor h4),
+.editor :global(.ql-editor h5),
+.editor :global(.ql-editor h6) {
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* Scrollbar styling */
+.editor :global(.ql-container)::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor :global(.ql-container)::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.editor :global(.ql-container)::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+.editor :global(.ql-container)::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .editorWrapper {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .editor :global(.ql-toolbar) {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .editor :global(.ql-editor) {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .editor :global(.ql-toolbar .ql-picker-options) {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .editor :global(.ql-toolbar) {
+    padding: 8px;
+  }
+
+  .editor :global(.ql-toolbar button) {
+    width: 28px;
+    height: 28px;
+  }
+
+  .editor :global(.ql-editor) {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  .editor :global(.ql-container) {
+    min-height: 250px;
+  }
+}

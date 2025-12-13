@@ -19,6 +19,7 @@ import {
   EyeOutlined
 } from '@ant-design/icons';
 import axios from 'axios';
+import RichTextEditor from '../../../components/RichTextEditor/RichTextEditor';
 import styles from './BlogLanguages.module.css';
 
 const API_URL = import.meta.env.VITE_API;
@@ -62,7 +63,7 @@ const BlogLanguagesAdmin = () => {
 
       if (editingBlog) {
         // Update
-        await axios.put(`${API_URL}/api/v1/blog/blogLanguages/${editingBlog.slug}`, payload);
+        await axios.put(`${API_URL}/api/v1/blog/blogLanguages/${editingBlog._id}`, payload);
         message.success('Cập nhật blog thành công');
       } else {
         // Create
@@ -96,9 +97,9 @@ const BlogLanguagesAdmin = () => {
     setViewModalVisible(true);
   };
 
-  const handleDelete = async (slug) => {
+  const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/api/v1/blog/blogLanguages/${slug}`);
+      await axios.delete(`${API_URL}/api/v1/blog/blogLanguages/${id}`);
       message.success('Xóa blog thành công');
       fetchBlogs();
     } catch (error) {
@@ -165,7 +166,7 @@ const BlogLanguagesAdmin = () => {
           </Button>
           <Popconfirm
             title="Bạn có chắc muốn xóa blog này?"
-            onConfirm={() => handleDelete(record.slug)}
+            onConfirm={() => handleDelete(record._id)}
             okText="Có"
             cancelText="Không"
           >
@@ -248,16 +249,14 @@ const BlogLanguagesAdmin = () => {
             </Form.Item>
 
             <Form.Item
-              name="content" // Tên field trong form là 'content'
+              name="content"
               label="Nội dung blog"
               rules={[
                 { required: true, message: 'Vui lòng nhập nội dung blog' }
               ]}
             >
-              <Input.TextArea
-                rows={10} // Tăng số hàng cho nội dung
-                placeholder="Nhập nội dung chi tiết của blog"
-                showCount
+              <RichTextEditor 
+                placeholder="Viết nội dung blog với formatting đầy đủ..."
               />
             </Form.Item>
 
@@ -327,9 +326,10 @@ const BlogLanguagesAdmin = () => {
               <div className={styles.viewDetails}>
                 <div className={styles.detailItem}>
                   <strong>Nội dung:</strong>
-                  <div className={styles.contentPreview}>
-                    {viewingBlog.content}
-                  </div>
+                  <div 
+                    className={styles.contentPreview}
+                    dangerouslySetInnerHTML={{ __html: viewingBlog.content }}
+                  />
                 </div>
 
                 <div className={styles.detailItem}>

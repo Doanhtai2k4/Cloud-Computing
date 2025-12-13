@@ -12,7 +12,7 @@ const MainBlogLanguages = () => {
            <div className={styles.containerMainBlogLanguages}>
                  <h2>{blog.title}</h2>
             <img src={blog.image} alt={blog.title} />
-            <p>{blog.content}</p>
+            <div className={styles.blogContent} dangerouslySetInnerHTML={{ __html: blog.content }} />
            </div>
         </Layout>
     );
