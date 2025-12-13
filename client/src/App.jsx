@@ -7,6 +7,7 @@ import PublicRoute from "./Router/PublicRoute";
 import UserRoute from "./Router/UserRoute";
 import AdminRoute from "./Router/AdminRoute";
 import Profile from "./pages/Profile/Profile";
+import SavedPosts from "./pages/SavedPosts/SavedPosts";
 import CategoryLanguages from "./pages/ProgramLanguages/CategoryLanguages/CategoryLanguages";
 import MainBlogLanguages from "./pages/ProgramLanguages/CategoryLanguages/BlogLanguages/MainBlogLanguages";
 import Languages from "./pages/ProgramLanguages/CategoryLanguages/Languages/Languages";
@@ -55,6 +56,15 @@ const App = () => {
           element={
             <UserRoute>
               <Profile />
+            </UserRoute>
+          }
+        />
+
+        <Route
+          path="/saved-posts"
+          element={
+            <UserRoute>
+              <SavedPosts />
             </UserRoute>
           }
         />

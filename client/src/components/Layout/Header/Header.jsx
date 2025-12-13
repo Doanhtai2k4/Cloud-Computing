@@ -167,6 +167,14 @@ const Header = () => {
                                                 Profile
                                             </Link>
                                         </li>
+                                        <li>
+                                            <Link to="/saved-posts" className={styles.userDropdownLink}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                                </svg>
+                                                Bài viết đã lưu
+                                            </Link>
+                                        </li>
                                         {auth.user.role === 1 && (
                                             <li>
                                                 <Link to="/admin/dashboard" className={styles.userDropdownLink}>
@@ -287,6 +295,14 @@ const Header = () => {
                                         <Link to="/profile" className={`${styles.btn} ${styles.btnDiscord}`}>
                                             <MdPerson style={{fontSize: '16px', color:'white'}}/>
                                             <span style={{fontSize: '17px', color:'white'}}>Profile</span>
+                                        </Link>
+                                    </li>
+                                    <li className={styles.liMobile}>
+                                        <Link to="/saved-posts" className={`${styles.btn} ${styles.btnDiscord}`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{color:'white'}}>
+                                                <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                            </svg>
+                                            <span style={{fontSize: '17px', color:'white'}}>Bài viết đã lưu</span>
                                         </Link>
                                     </li>
                                     {auth.user.role === 1 && (

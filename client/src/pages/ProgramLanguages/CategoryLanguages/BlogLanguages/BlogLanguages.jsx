@@ -47,12 +47,12 @@ const BlogLanguages = () => {
     };
 
     const handleBookmark = async (e, postId) => {
-        e.stopPropagation(); // Ngăn trigger click vào blog card
+        e.stopPropagation();
+        e.preventDefault();
         
         const token = localStorage.getItem('token');
         if (!token) {
             message.warning('Vui lòng đăng nhập để lưu bài viết');
-            navigate('/login');
             return;
         }
 
@@ -66,7 +66,7 @@ const BlogLanguages = () => {
             if (response.data.success) {
                 message.success(response.data.message);
                 
-                // Update savedPosts state
+                // Update savedPosts state immediately
                 if (response.data.isBookmarked) {
                     setSavedPosts([...savedPosts, postId]);
                 } else {
